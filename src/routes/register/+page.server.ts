@@ -1,4 +1,7 @@
 import type { Actions } from './$types';
+import { createClient } from '@supabase/supabase-js';
+import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY } from '$env/static/public';
+import { fail, redirect } from '@sveltejs/kit';
 
 interface ReturnObject {
 	success: boolean;
@@ -28,19 +31,29 @@ export let actions = {
 		if (!password.length) {
 			returnObject.errors.push('Password is required.');
 		}
-    if (password !== passwordConfirmation) {
-      returnObject.errors.push('Passwords do not match');
-    }
+		if (password !== passwordConfirmation) {
+			returnObject.errors.push('Passwords do not match');
+		}
 
-    if (returnObject.errors.length) {
-      returnObject.success = false;
-      return returnObject;
-    }
+		if (returnObject.errors.length) {
+			returnObject.success = false;
+			return returnObject;
+		}
 
-    // registration flow
+		// registration flow
+		let supabase = createClient(PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY);
+		let { data, error } = await supabase.auth.signUp({
+			email,
+			password
+		});
 
-    return returnObject;
+		if (error || !data.user) {
+			console.log('There has been an error');
+			console.log(error);
+			returnObject.success = true;
+			return fail(400, returnObject);
+		}
 
-		console.log(formData);
+		redirect(303, '/private/dashboard');
 	}
 };
