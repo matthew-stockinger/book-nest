@@ -3,7 +3,10 @@
 	import favicon from '$lib/assets/favicon.svg';
 	import './../app.css';
 
-	let { children } = $props();
+	let { children, data } = $props();
+	let { session, supabase } = $derived(data);
+
+	$inspect(session);
 </script>
 
 <svelte:head>
