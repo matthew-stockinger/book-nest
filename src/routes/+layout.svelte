@@ -4,9 +4,10 @@
 	import './../app.css';
 
 	let { children, data } = $props();
-	let { session, supabase } = $derived(data);
+	let { session, supabase, user } = $derived(data);
 
 	$inspect(session);
+	$inspect(user);
 </script>
 
 <svelte:head>
