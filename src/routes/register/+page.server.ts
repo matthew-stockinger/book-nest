@@ -56,6 +56,14 @@ export let actions = {
 			return fail(400, returnObject);
 		}
 
+		let userId = data.user.id;
+		await supabase.from('user_names').insert([
+			{
+				user_id: userId,
+				name
+			}
+		]);
+
 		redirect(303, '/private/dashboard');
 	}
 };
