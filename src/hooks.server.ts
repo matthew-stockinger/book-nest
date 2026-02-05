@@ -1,10 +1,11 @@
 import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY } from '$env/static/public';
+import type { Database } from '$lib/types/database.types';
 import { createServerClient } from '@supabase/ssr';
 import { redirect, type Handle } from '@sveltejs/kit';
 import { sequence } from '@sveltejs/kit/hooks';
 
 const supabase: Handle = async ({ event, resolve }) => {
-	event.locals.supabase = createServerClient(
+	event.locals.supabase = createServerClient<Database>(
 		PUBLIC_SUPABASE_URL,
 		PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY,
 		{

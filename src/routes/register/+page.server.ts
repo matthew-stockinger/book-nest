@@ -57,6 +57,7 @@ export let actions = {
 		}
 
 		let userId = data.user.id;
+		console.log('inserting new user_names row');
 		await supabase.from('user_names').insert([
 			{
 				user_id: userId,

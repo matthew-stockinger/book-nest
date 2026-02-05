@@ -7,10 +7,9 @@
 
 	let { children, data } = $props();
 	let { session, supabase } = $derived(data);
-	$inspect(session);
+	// $inspect(session);
 
 	let userState = setUserState({ session: data.session, supabase: data.supabase, user: data.user });
-
 
 	$effect(() => {
 		let { data } = supabase.auth.onAuthStateChange((_, newSession) => {
