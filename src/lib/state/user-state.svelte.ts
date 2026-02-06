@@ -28,6 +28,7 @@ export class UserState {
 	user = $state<User | null>(null);
 	allBooks = $state<Book[]>([]); // Book type is generated from supabase schema
 	// search: generate types with typescript supabase
+	userName = $state<string | null>(null);
 
 	constructor(data: UserStateProps) {
 		this.updateState(data);
@@ -43,15 +44,26 @@ export class UserState {
 	async fetchUserData() {
 		// if there's no authenticated user or supabase instance
 		if (!this.user || !this.supabase) return;
+		let userId = this.user.id;
 
-		let { data, error } = await this.supabase.from('books').select('*').eq('user_id', this.user.id);
-		if (error) {
-			console.log('error fetching all books for user');
-			console.log(error);
+		let [booksResponse, userNamesResponse] = await Promise.all([
+			this.supabase.from('books').select('*').eq('user_id', userId),
+			this.supabase.from('user_names').select('name').eq('user_id', userId).single()
+		]);
+
+		if (
+			booksResponse.error ||
+			!booksResponse.data ||
+			userNamesResponse.error ||
+			!userNamesResponse.data
+		) {
+			console.log('error fetching user data');
+			console.log({ booksError: booksResponse.error, userNamesError: userNamesResponse.error });
 			return;
 		}
 
-		this.allBooks = data as Book[];
+		this.allBooks = booksResponse.data;
+		this.userName = userNamesResponse.data.name;
 	}
 
 	async logout() {
