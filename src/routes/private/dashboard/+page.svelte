@@ -22,7 +22,7 @@
 		</div>
 	</div>
 
-	<BookCategory categoryName="Your favourite books" booksToDisplay={allBooks.slice(0, 3)} />
+	<BookCategory categoryName="Your favourite books" booksToDisplay={allBooks.slice(0, 10)} />
 </div>
 
 <style>
