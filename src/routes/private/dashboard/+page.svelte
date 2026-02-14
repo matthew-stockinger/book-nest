@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { BookCard, BookCategory } from '$components';
+	import { BookCategory } from '$components';
 	import { getUserState } from '$lib/state/user-state.svelte';
 	import Icon from '@iconify/svelte';
 
@@ -22,7 +22,18 @@
 		</div>
 	</div>
 
-	<BookCategory categoryName="Your favourite books" booksToDisplay={allBooks.slice(0, 10)} />
+	<BookCategory
+		categoryName="Your favourite books"
+		booksToDisplay={userContext.getHighestRatedBooks()}
+	/>
+	<BookCategory
+		categoryName="Recently added, unread books"
+		booksToDisplay={userContext.getUnreadBooks()}
+	/>
+	<BookCategory
+		categoryName="Highest rated books from your favourite genre: Fantasy"
+		booksToDisplay={allBooks.slice(0, 10)}
+	/>
 </div>
 
 <style>

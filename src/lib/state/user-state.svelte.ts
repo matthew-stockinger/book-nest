@@ -66,6 +66,23 @@ export class UserState {
 		this.userName = userNamesResponse.data.name;
 	}
 
+	getHighestRatedBooks() {
+		return this.allBooks
+			.filter((book) => book.rating)
+			.toSorted((a, z) => z.rating! - a.rating!)
+			.slice(0, 10);
+	}
+
+	getUnreadBooks() {
+		let unread = this.allBooks
+			.filter((book) => !book.started_reading_on)
+			.toSorted((a, z) => Date.parse(z.created_at!) - Date.parse(a.created_at!))
+			.slice(0, 10);
+
+		console.log(unread);
+		return unread;
+	}
+
 	async logout() {
 		await this.supabase?.auth.signOut();
 	}
