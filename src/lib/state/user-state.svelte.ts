@@ -79,8 +79,31 @@ export class UserState {
 			.toSorted((a, z) => Date.parse(z.created_at!) - Date.parse(a.created_at!))
 			.slice(0, 10);
 
-		console.log(unread);
 		return unread;
+	}
+
+	getFavoriteGenre() {
+		// most popular genre in the db is the fav.
+		if (this.allBooks.length === 0) return '';
+		var genreCounts: { [key: string]: number } = {};
+
+		this.allBooks.forEach((book) => {
+			let genres = book.genre ? book.genre.split(',') : [];
+			genres.forEach((genre) => {
+				let trimmedGenre = genre.trim();
+				if (trimmedGenre && !genreCounts[trimmedGenre]) {
+					genreCounts[trimmedGenre] = 1;
+				} else if (trimmedGenre && genreCounts[trimmedGenre]) {
+					genreCounts[trimmedGenre] += 1;
+				}
+			});
+		});
+
+		let mostCommonGenre = Object.keys(genreCounts).reduce((a, b) =>
+			genreCounts[a] > genreCounts[b] ? a : b
+		);
+
+		return mostCommonGenre || null;
 	}
 
 	async logout() {

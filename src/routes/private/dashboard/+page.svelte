@@ -31,7 +31,7 @@
 		booksToDisplay={userContext.getUnreadBooks()}
 	/>
 	<BookCategory
-		categoryName="Highest rated books from your favourite genre: Fantasy"
+		categoryName={`Highest rated books from your favourite genre: ${userContext.getFavoriteGenre()}`}
 		booksToDisplay={allBooks.slice(0, 10)}
 	/>
 </div>
