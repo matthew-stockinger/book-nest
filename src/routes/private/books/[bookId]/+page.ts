@@ -11,9 +11,9 @@ export let load: PageLoad = async ({ parent, params }) => {
 		.eq('id', Number.parseInt(bookId))
 		.single();
 
-  if (data) {
-    return { book: data }
-  }
+	if (data) {
+		return { book: data };
+	}
 
-  error(404, 'not found');
+	error(404, 'not found');
 };

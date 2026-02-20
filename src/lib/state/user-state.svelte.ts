@@ -22,6 +22,8 @@ export interface Book {
 	user_id: string;
 }
 
+type UpdatableBookFields = Omit<Book, 'id' | 'user_id' | 'created_at'>;
+
 export class UserState {
 	session = $state<Session | null>(null);
 	supabase = $state<SupabaseClient<Database> | null>(null);
@@ -106,6 +108,24 @@ export class UserState {
 		);
 
 		return mostCommonGenre || null;
+	}
+
+	getBookById(bookId: number) {
+		return this.allBooks.find((book) => book.id === bookId);
+	}
+
+	async updateBook(bookId: number, updateObject: Partial<UpdatableBookFields>) {
+		if (!this.supabase) return;
+		let { status, error } = await this.supabase.from('books').update(updateObject).eq('id', bookId);
+		if (status === 204 && !error) {
+			this.allBooks = this.allBooks.map((book) => {
+				if (book.id === bookId) {
+					return { ...book, ...updateObject };
+				} else {
+					return book;
+				}
+			});
+		}
 	}
 
 	async logout() {
