@@ -9,16 +9,16 @@ export let POST: RequestHandler = async ({ request }) => {
   // here I'm returning a dummy array.
 
   let bookArray = [
-    { booktitle: 'The Diary of a CEO', author: 'Steven Bartlett' },
-    { booktitle: 'Invisible Women', author: 'Caroline Criado Perez' },
-    { booktitle: 'Where Good Ideas Come From', author: 'Steven Johnson' },
-    { booktitle: 'The Narrows', author: 'Michael Connelly' },
-    { booktitle: 'The Drop', author: 'Michael Connelly' },
-    { booktitle: 'The Black Ice', author: 'Michael Connelly' },
-    { booktitle: 'Emotional Intelligence', author: 'Daniel Goleman' },
-    { booktitle: 'How to Read a Book', author: 'Mortimer J. Adler' },
-    { booktitle: 'The Unfair Advantage', author: 'Ash Ali' },
-    { booktitle: 'The Collingridge Dilemma', author: 'Jared Cohen' },
+    { bookTitle: 'The Diary of a CEO', author: 'Steven Bartlett' },
+    { bookTitle: 'Invisible Women', author: 'Caroline Criado Perez' },
+    { bookTitle: 'Where Good Ideas Come From', author: 'Steven Johnson' },
+    { bookTitle: 'The Narrows', author: 'Michael Connelly' },
+    { bookTitle: 'The Drop', author: 'Michael Connelly' },
+    { bookTitle: 'The Black Ice', author: 'Michael Connelly' },
+    { bookTitle: 'Emotional Intelligence', author: 'Daniel Goleman' },
+    { bookTitle: 'How to Read a Book', author: 'Mortimer J. Adler' },
+    { bookTitle: 'The Unfair Advantage', author: 'Ash Ali' },
+    { bookTitle: 'The Collingridge Dilemma', author: 'Jared Cohen' },
   ];
 
 	return json({ bookArray });
