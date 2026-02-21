@@ -1,3 +1,4 @@
+import { goto } from '$app/navigation';
 import type { Database } from '$lib/types/database.types';
 import type { Session, SupabaseClient, User } from '@supabase/supabase-js';
 import { getContext, setContext } from 'svelte';
@@ -144,6 +145,16 @@ export class UserState {
 		} = this.supabase.storage.from('book-covers').getPublicUrl(filePath);
 
 		await this.updateBook(bookId, { cover_image: publicUrl });
+	}
+
+	async deleteBookFromLibrary(bookId: number) {
+		if (!this.supabase) return;
+
+		let { error, status } = await this.supabase.from('books').delete().eq('id', bookId);
+		if (!error && status === 204) {
+			this.allBooks = this.allBooks.filter((book) => book.id !== bookId);
+		}
+		goto('/private/dashboard');
 	}
 
 	async logout() {
