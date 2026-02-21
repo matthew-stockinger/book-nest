@@ -128,6 +128,24 @@ export class UserState {
 		}
 	}
 
+	async uploadBookCover(file: File, bookId: number) {
+		if (!this.user || !this.supabase) return;
+		let filePath = `${this.user.id}/${new Date().getTime()}_${file.name}`;
+		let { error: uploadError } = await this.supabase.storage
+			.from('book-covers')
+			.upload(filePath, file);
+		if (uploadError) {
+			return console.log(uploadError);
+		}
+
+		// give storage bucket URL to db.  Front-end updates automatically
+		let {
+			data: { publicUrl }
+		} = this.supabase.storage.from('book-covers').getPublicUrl(filePath);
+
+		await this.updateBook(bookId, { cover_image: publicUrl });
+	}
+
 	async logout() {
 		await this.supabase?.auth.signOut();
 	}
