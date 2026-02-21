@@ -102,8 +102,6 @@ export class UserState {
 			});
 		});
 
-		console.log(genreCounts);
-
 		let mostCommonGenre = Object.keys(genreCounts).reduce((a, b) =>
 			genreCounts[a] > genreCounts[b] ? a : b
 		);
