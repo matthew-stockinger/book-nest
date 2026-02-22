@@ -1,18 +1,16 @@
 <script lang="ts">
 	import { Button } from '$components';
+	import type { OpenAiBook } from '$lib/state/user-state.svelte';
 	import { convertFileToBase64 } from '$lib/utils/openai-helpers';
 	import Icon from '@iconify/svelte';
 	import Dropzone from 'svelte-file-dropzone';
+	import { getUserState } from '$lib/state/user-state.svelte';
 
+	let userContext = getUserState();
 	let isLoading = $state(false);
 	let errorMessage = $state('');
 	let recognizedBooks = $state<OpenAiBook[]>([]);
 	let booksSuccessfullyAdded = $state(false);
-
-	interface OpenAiBook {
-		bookTitle: string;
-		author: string;
-	}
 
 	async function handleDrop(e: CustomEvent<any>) {
 		let { acceptedFiles } = e.detail;
@@ -44,6 +42,21 @@
 				"Could not upload given file.  Are you sure it's an image with a file size less than 10 MB?";
 		}
 	}
+
+	function removeBook(index: number) {
+		recognizedBooks.splice(index, 1);
+	}
+
+  async function addAllBooks() {
+    isLoading = true;
+    try {
+      await userContext.addBooksToLibrary(recognizedBooks);
+      isLoading = false;
+      booksSuccessfullyAdded = true;
+    } catch (error: any) {
+      errorMessage = error.message;
+    }
+  }
 </script>
 
 <h2 class="mt-m mb-l">Take a picture to add books</h2>
@@ -83,7 +96,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				{#each recognizedBooks as book, i}
+				{#each recognizedBooks as book, index}
 					<tr>
 						<td>{book.bookTitle}</td>
 						<td>{book.author}</td>
@@ -92,7 +105,7 @@
 								type="button"
 								aria-label="Remove book"
 								class="remove-book"
-								onclick={() => console.log(`Delete book with index ${i}`)}
+								onclick={() => removeBook(index)}
 							>
 								<Icon icon="streamline:delete-1-solid" width={'24'} />
 							</button>
@@ -101,7 +114,7 @@
 				{/each}
 			</tbody>
 		</table>
-		<Button onclick={() => console.log(`Add all remaining books`)}>Add all books</Button>
+		<Button onclick={addAllBooks}>Add all books</Button>
 	</div>
 {:else}
 	<h4>The selected {recognizedBooks.length} books have been added to your library.</h4>
