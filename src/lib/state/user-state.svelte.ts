@@ -183,6 +183,35 @@ export class UserState {
 		}
 	}
 
+	async updateAccountData(email: string, userName: string) {
+		console.log('updateAccountData');
+		if (!this.session) {
+			console.log('no session, returning');
+			return;
+		}
+		// pass to back-end.
+		// note authorization in headers (could also be in the body).  This is to secure
+		// 	access to our own api route.  See server-side implementation.
+		try {
+			console.log('trying fetch');
+			let response = await fetch('/api/update-account', {
+				method: 'PATCH',
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${this.session.access_token}`
+				},
+				body: JSON.stringify({
+					email,
+					userName
+				})
+			});
+
+			console.log(response);
+		} catch (error) {
+			console.log(`Failed to delete account:`, error);
+		}
+	}
+
 	async logout() {
 		await this.supabase?.auth.signOut();
 	}

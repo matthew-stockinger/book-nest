@@ -15,6 +15,17 @@
 		let sumOfAllRatings = booksWithRating.reduce((acc, book) => acc + book.rating!, 0);
 		return Math.round((100 * sumOfAllRatings) / booksWithRating.length) / 100;
 	});
+
+	async function toggleEditModeAndSaveToDatabase() {
+		if (isEditMode && userName && email) {
+			await userContext.updateAccountData(userName, email)
+		}
+		
+		isEditMode = !isEditMode;
+
+		// updating private info that is not in public db tables requires pass through server.
+
+	}
 </script>
 
 <div class="settings-page">
@@ -33,7 +44,7 @@
 			<h3>{email}</h3>
 		{/if}
 		<div class="buttons-container mt-l">
-			<Button isSecondary={true} onclick={() => console.log('edit mode?')}>
+			<Button isSecondary={true} onclick={toggleEditModeAndSaveToDatabase}>
 				{isEditMode ? 'Save changes' : 'Edit'}
 			</Button>
 			<Button isDanger={true} onclick={() => console.log('delete account')}>Delete Account</Button>
