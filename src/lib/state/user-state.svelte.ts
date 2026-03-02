@@ -92,7 +92,7 @@ export class UserState {
 
 	getFavoriteGenre() {
 		// most popular genre in the db is the fav.
-		if (this.allBooks.length === 0) return '';
+		if (this.allBooks.filter((book) => book.genre).length === 0) return '';
 		var genreCounts: { [key: string]: number } = {};
 
 		this.allBooks.forEach((book) => {
@@ -212,6 +212,26 @@ export class UserState {
 
 	async logout() {
 		await this.supabase?.auth.signOut();
+	}
+
+	async deleteAccount() {
+		if (!this.session) return;
+		try {
+			let response = await fetch('/api/delete-account', {
+				method: 'DELETE',
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${this.session.access_token}`
+				}
+			});
+
+			if (response.ok) {
+				await this.logout();
+				goto('/'); // could build a confirmation page here
+			}
+		} catch (error) {
+			console.log('Failed to delete account', error); // in prod, should display error to user here.
+		}
 	}
 }
 

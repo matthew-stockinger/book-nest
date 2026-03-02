@@ -21,19 +21,32 @@
 			</p>
 		</div>
 	</div>
-
-	<BookCategory
-		categoryName="Your favourite books"
-		booksToDisplay={userContext.getHighestRatedBooks()}
-	/>
-	<BookCategory
-		categoryName="Recently added, unread books"
-		booksToDisplay={userContext.getUnreadBooks()}
-	/>
-	<BookCategory
-		categoryName={`Highest rated books from your favourite genre: ${userContext.getFavoriteGenre()}`}
-		booksToDisplay={allBooks.slice(0, 10)}
-	/>
+	{#if allBooks.length}
+		{#if userContext.getHighestRatedBooks().length}
+			<BookCategory
+				categoryName="Your favourite books"
+				booksToDisplay={userContext.getHighestRatedBooks()}
+			/>
+		{/if}
+		<BookCategory
+			categoryName="Recently added, unread books"
+			booksToDisplay={userContext.getUnreadBooks()}
+		/>
+		{#if userContext.getFavoriteGenre()}
+			<BookCategory
+				categoryName={`Highest rated books from your favourite genre: ${userContext.getFavoriteGenre()}`}
+				booksToDisplay={allBooks.slice(0, 10)}
+			/>
+		{/if}
+	{:else}
+		<a href="/private/scan-shelf" class="upload-hint mt-l">
+			<h3>You have no books in your library at this moment. Click here to get started!</h3>
+			<div class="mt-m">
+				<Icon icon="icons8:plus" width="72" height="72" />
+				<p>Add books</p>
+			</div>
+		</a>
+	{/if}
 </div>
 
 <style>
@@ -58,5 +71,20 @@
 		text-align: right;
 		max-width: 30%;
 		min-width: 300px;
+	}
+
+	.upload-hint {
+		display: flex;
+		text-decoration: none;
+		width: 100%;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.upload-hint div {
+		display: flex;
+		justify-content: center;
+		align-items: center;
 	}
 </style>

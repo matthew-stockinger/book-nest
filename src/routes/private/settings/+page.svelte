@@ -18,13 +18,24 @@
 
 	async function toggleEditModeAndSaveToDatabase() {
 		if (isEditMode && userName && email) {
-			await userContext.updateAccountData(userName, email)
+			await userContext.updateAccountData(userName, email);
 		}
-		
+
 		isEditMode = !isEditMode;
 
 		// updating private info that is not in public db tables requires pass through server.
+		// see user-state for that handling.
+	}
 
+	async function deleteAccount() {
+		let confirmDelete = window.confirm(
+			'Are you sure you want to delete your account?  This action cannot be undone.  You are about to remove all of your data!'
+		);
+
+		if (confirmDelete) {
+			// delete the user
+			await userContext.deleteAccount();
+		}
 	}
 </script>
 
@@ -47,7 +58,7 @@
 			<Button isSecondary={true} onclick={toggleEditModeAndSaveToDatabase}>
 				{isEditMode ? 'Save changes' : 'Edit'}
 			</Button>
-			<Button isDanger={true} onclick={() => console.log('delete account')}>Delete Account</Button>
+			<Button isDanger={true} onclick={deleteAccount}>Delete Account</Button>
 		</div>
 	</div>
 	<div class="stats-container">
@@ -70,7 +81,6 @@
 
 	.settings-container {
 		margin-right: 80px;
-
 	}
 
 	.settings-container input {
