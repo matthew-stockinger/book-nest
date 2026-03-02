@@ -183,8 +183,7 @@ export class UserState {
 		}
 	}
 
-	async updateAccountData(email: string, userName: string) {
-		console.log('updateAccountData');
+	async updateAccountData(userName: string, email: string) {
 		if (!this.session) {
 			console.log('no session, returning');
 			return;
@@ -193,7 +192,6 @@ export class UserState {
 		// note authorization in headers (could also be in the body).  This is to secure
 		// 	access to our own api route.  See server-side implementation.
 		try {
-			console.log('trying fetch');
 			let response = await fetch('/api/update-account', {
 				method: 'PATCH',
 				headers: {
@@ -201,12 +199,12 @@ export class UserState {
 					Authorization: `Bearer ${this.session.access_token}`
 				},
 				body: JSON.stringify({
-					email,
-					userName
+					userName,
+					email
 				})
 			});
 
-			console.log(response);
+			if (response.ok) this.userName = userName; // update frontend state
 		} catch (error) {
 			console.log(`Failed to delete account:`, error);
 		}
